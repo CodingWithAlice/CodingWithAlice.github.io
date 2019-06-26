@@ -12,7 +12,7 @@ github_repo: "https://github.com/CodingWithAlice/CodingWithAlice.github.io.git" 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
 sidebar-about-description: "CodingWithAlice"
-sidebar-avatar: /img/1.gif      # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-avatar: /img/head.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
 
