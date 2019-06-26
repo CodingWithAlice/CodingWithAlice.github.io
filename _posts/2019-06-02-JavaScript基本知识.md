@@ -13,7 +13,7 @@ typora-root-url: ..
 `JavaScript` :简称:`js`
 
 >* `js`分三个部分:
-* 1. `ECMAScript` 标准----`js`的基本的语法
++ 1. `ECMAScript` 标准----`js`的基本的语法
 	`JavaScript`的核心，描述了语言的基本语法和数据类型，`ECMAScript`是一套标准，定义了一种语言的标准与具体实现无关
 * 2. `DOM`------Document Object Model 文档对象模型
 	一套操作页面元素的API；`DOM`可以把HTML看做是文档树，通过`DOM`提供的API可以对树上的节点进行操作
