@@ -9,7 +9,9 @@
   overflow-x: auto;       // this sets the scrolling in x
 }
 
-
+.highlight {
+  font-size: 1.05rem;
+}
 
 .highlight pre code {
   white-space: pre;       // forces <code> to respect <pre> formatting
