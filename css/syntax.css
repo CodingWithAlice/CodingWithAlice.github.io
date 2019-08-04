@@ -20,14 +20,14 @@
  */
 
 .highlight pre, pre, .highlight .hll { background-color: #f8f8f8; border: 1px solid #ccc; padding: 6px 10px; border-radius: 3px; }
-.highlight .c { color: #e45a30; font-style: static; }
+.highlight .c { color: #e45a30; font-style: static;font-size: 14px; }
 .highlight .err { color: #a61717; background-color: #e3d2d2; }
 .highlight .k { font-weight: bold; }
 .highlight .o { font-weight: bold; }
-.highlight .cm { color: #e45a30; font-style: static; }
+.highlight .cm { color: #e45a30; font-style: static;font-size: 14px; }
 .highlight .cp { color: #999999; font-weight: bold; }
-.highlight .c1 { color: #e45a30; font-style: static; }
-.highlight .cs { color: #999999; font-weight: bold; font-style: italic; }
+.highlight .c1 { color: #e45a30; font-style: static;font-size: 14px; }
+.highlight .cs { color: #999999; font-weight: bold; font-style: static; }
 .highlight .gd { color: #000000; background-color: #ffdddd; }
 .highlight .gd .x { color: #000000; background-color: #ffaaaa; }
 .highlight .ge { font-style: italic; }
