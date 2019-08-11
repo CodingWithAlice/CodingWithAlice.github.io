@@ -209,7 +209,7 @@ th {
   abbr[title]:after {
     content: " (" attr(title) ")";
   }
-  a[href^="#"]:after,
+  a[href^="*"]:after,
   a[href^="javascript:"]:after {
     content: "";
   }
