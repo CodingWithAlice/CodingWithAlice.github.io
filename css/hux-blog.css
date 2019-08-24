@@ -124,11 +124,11 @@
 .side-catalog .catalog-body .active a {
   color: #0085a1!important;
 }
-/* @media (max-width: 1200px) {
+@media (max-width: 750px) {
   .side-catalog {
     display: none;
   }
-} */
+}
 body {
   /* Hux learn from
      *     TypeIsBeautiful,
