@@ -11,7 +11,7 @@ tags:
 typora-root-url: ..
 ---
 
-## 工作 localstorage改为sessionstorage
+##  localstorage改为sessionstorage
 
 ​	`localStorage`和`sessionStorage`一样都是用来**存储客户端临时信息**的对象。
 
