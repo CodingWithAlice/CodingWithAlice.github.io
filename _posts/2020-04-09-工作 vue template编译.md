@@ -48,8 +48,10 @@ typora-root-url: ..
 
     简单来说，没有使用vue独有的语法的节点就可以称为静态节点
 
-+ generate函数：递归转化AST，创建 render 函数字符串
++ generate函数：**递归转化AST，创建 render 函数字符串**
 
   - render函数就是返回`_c(‘tagName’,data,children)`的方法（参数1:标签名，参数2:他的一些数据，属性/指令/表达式/方法等，属性3:当前标签的子标签，每个子标签的格式也是`_c(‘tagName’,data,children)`）
 
-  这个编译过程会在第一次mount的时候被调用生成Vnode--虚拟DOM，如果有数据的更新，Vnode 会与数据改变之前的 Vnode 做 diff，对内容进行改动后，更新到真的DOM上
+​        这个编译过程会在第一次mount的时候被调用生成**Vnode（描述节点的对象**，描述如何创建真实的DOM节点，有注释节点、文本节点、元素节点、组件节点、函数式组件、克隆节点）--Vnode作用是新旧vnode进行对比，只更新发生变化的节点，更新到真的DOM上。
+
+Vnode更新节点的方法--patch（在原有的基础上修改DOM节点，渲染视图，可以增删改）
