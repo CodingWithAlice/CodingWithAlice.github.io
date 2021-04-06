@@ -169,11 +169,11 @@ getCascaderObj(val, opt) {
 
 其中，传入的参数：`value`代表的是**当前选中的id值**，`index`表示的是**当前id值在选中的数组中的序号**，`array`代表了选中的三项的id数组，在opt遍历的itm表示**数据源中的数据**，如下图。
 
-![1566655598049](/img/assets_2019/1566655598049.png)
+![1566655598049](/../img/assets_2019/1566655598049.png)
 
 通过`getCascaderObj`方法得到的vals数组是一个包含了源数组中id值的部分，所以要单独获得每一个选择的内容的话，要通过数组：` this.vals[0].value；this.vals[1].value；this.vals[2].value`
 
-![1566655586000](/img/assets_2019/1566655586000.png)
+![1566655586000](/../img/assets_2019/1566655586000.png)
 
 ### 6. `el-table` 表格
 
