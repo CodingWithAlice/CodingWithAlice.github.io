@@ -7,7 +7,7 @@ author:
 header-img: 
 catalog: true
 tags:
-    - < 面试题整理 >
+    - < CSS相关内容 >
 typora-root-url: ..
 ---
 
@@ -31,5 +31,5 @@ typora-root-url: ..
 
 区别3：link是XHTML标签，无兼容问题；@import是在CSS2.1提出的，低版本的浏览器不支持。
 
-区别4：ink支持使用Javascript控制DOM去改变样式；而@import不支持。
+区别4：link支持使用Javascript控制DOM去改变样式；而@import不支持。
 

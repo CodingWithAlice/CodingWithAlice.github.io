@@ -1,23 +1,18 @@
 ---
 layout:     post
-title:     工作 背景图
+title:     background属性的使用
 subtitle:  
 date:       2021-02-04
 author:     
 header-img: 
 catalog: true
 tags:
-    - < 工作遇到的问题记录 >
+    - < CSS相关内容 >
 typora-root-url: ..
 ---
 
 
-# 工作 背景图
-
-
-
-
-# 背景图写法探讨
+# background属性的使用
 
 写在前面，这篇主题是结合开发中遇到的问题，对backgroud样式进行一个系统了解学习
 
@@ -73,7 +68,6 @@ background-size : 设置背景图片大小  [background-size](https://developer.
 background：[background](https://developer.mozilla.org/zh-CN/docs/Web/CSS/background)
 
 ![image-20210204114623975](/../img/assets_2019/image-20210204114623975.png)
-
 
 
 
