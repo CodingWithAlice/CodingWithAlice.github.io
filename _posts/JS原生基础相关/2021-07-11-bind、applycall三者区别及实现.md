@@ -122,7 +122,6 @@ Function.bind(thisArg[, arg1[, arg2[, ...]]])
 
 ```js
 function add (a, b) { return a + b;}
-
 function sub (a, b) {return a - b;}
 
 // add 的 this = sub 函数，add 并没有使用 this，所以还是 return a+b 的结果
@@ -130,9 +129,28 @@ add.bind(sub, 5, 3); // 这时，并不会返回 8
 add.bind(sub, 5, 3)(); // 调用后，返回 8
 ```
 
-#### 用apply实现bind
+```js
+let button = document.getElementById('button');
+let text = document.getElementById('text');
+button.onclick = function() {
+    alert(this.id); // 弹出'text'
+}.bind(text); // 注意要用匿名函数 -> 箭头函数的不会创建自身的上下文， this 在定义时确定
+```
+
+
+
+#### 用 apply/call 实现bind
 
 <img src="/../img/assets_2019/image-20210712163819701.png" alt="image-20210712163819701" style="zoom:40%;" />
 
-
+```js
+Function.prototype.newBind = function (context) {
+    let self = this; // 调用 bind 的函数
+    let args = [].slice.call(arguments, 1); // 调用 bind 时传入的参数
+    return function() {
+        // context -  newBind 的第一个参数，即 this 要指向的对象
+        self.apply(context, [...arguments,...args]);
+    }
+}
+```
 
