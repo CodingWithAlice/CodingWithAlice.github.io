@@ -7,7 +7,7 @@ author:
 header-img: 
 catalog: true
 tags:
-    - < 黑马视频 >知识点
+    - < JS原生基础相关 >
 typora-root-url: ..
 ---
 `JavaScript` :简称:`js`
@@ -36,7 +36,6 @@ typora-root-url: ..
 	+ `html`和`css` 也是语言,属于标记语言,不属于编程语言;
 		+ 编译语言:需要把代码翻译成计算机所认知的二进制语言,才能够执行
 		+ 本语言:不需要编译,直接执行
-		
 > JavaScript`和HTML、CSS的区别?
 
 1. HTML：提供网页的结构，提供网页中的内容;是标记语言,展示数据的
