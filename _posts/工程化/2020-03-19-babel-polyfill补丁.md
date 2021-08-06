@@ -20,7 +20,7 @@ typora-root-url: ..
 
 - 总结：
 
-    `babel-polyfill` 是一种为低版本浏览器补充 ES6 方法/属性的模块，、
+    `babel-polyfill` 是一种为低版本浏览器补充 ES6 方法/属性的模块
 
     作用： **为所有 API 增加兼容方法**
 
