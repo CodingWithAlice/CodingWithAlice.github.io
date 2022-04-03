@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      UniqueArray
-subtitle:  数组去重（算法整理）
+title:      数组去重（算法整理）
+subtitle:  
 date:       2019-07-16
 author:     
 header-img: 
