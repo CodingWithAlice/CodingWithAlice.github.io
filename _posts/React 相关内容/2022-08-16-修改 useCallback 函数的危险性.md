@@ -47,6 +47,6 @@ useCallback hooks 生成的函数，在依赖不变的情况下，这个函数�
         setLastStatus(status); // 此次新增的 lastStatus 变量，存储上一次查询接口时的 status 的状态
         setStatus(res.status);
       })
-  }, [appId]); // 此次新增 status 变量作为依赖
+  }, [appId, status]); // 此次新增 status 变量作为依赖
 ```
 
