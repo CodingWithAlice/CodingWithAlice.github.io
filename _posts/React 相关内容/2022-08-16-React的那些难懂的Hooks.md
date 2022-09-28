@@ -11,7 +11,7 @@ tags:
 typora-root-url: ..
 ---
 
-# React那些难懂的Hooks
+# React那些难懂的Hooks - useEffect
 
 ## 背景
 
@@ -27,13 +27,13 @@ typora-root-url: ..
 
 推荐阅读：
 
-- [如何在useEffect里做数据请求](https://www.robinwieruch.de/react-hooks-fetch-data/) // todo
-- [如何处理错误和加载状态](https://www.robinwieruch.de/react-hooks-fetch-data/) // todo
+- [如何在useEffect里做数据请求](https://www.robinwieruch.de/react-hooks-fetch-data/) 
+- [如何处理错误和加载状态](https://www.robinwieruch.de/react-hooks-fetch-data/) 
 
 关键点：
 
 - **Effects 拿到的，总是定义它那次渲染中的 props 和 state**
-- 如果想要读取最新值，最简单的方法是使用 refs，详细： [这篇文章的最后一部分](https://overreacted.io/how-are-function-components-different-from-classes/) // todo
+- 如果想要读取最新值，最简单的方法是使用 refs，详细： [这篇文章的最后一部分](https://overreacted.io/how-are-function-components-different-from-classes/) 
 
 
 
@@ -51,7 +51,7 @@ function Counter() {
   
   useEffect(() => {
     document.title = `You clicked ${count} times`;
-  });
+  },[count]);
 
   return (
     <div>
@@ -83,7 +83,7 @@ function Counter() {
 
 每一个版本的`handleAlertClick`“记住” 了**它自己的 `count`；**
 
-**事件处理函数 “属于” 某一次特定的渲染**，当你点击的时候，它会使用那次渲染中 counte 的状态值。
+**事件处理函数 “属于” 某一次特定的渲染**，当你点击的时候，它会使用那次渲染中 count 的状态值。
 
 
 
@@ -93,13 +93,13 @@ function Counter() {
 
 每一个 effect 版本 “看到” 的`count`值（或者是 props 和 state ）都来自于它属于的那次渲染；
 
-React 会记住你提供的 effect 函数，并且会在每次更改作用于 DOM 并让浏览器绘制屏幕后，去调用它 -- **概念上，你可以想象 effects 是渲染结果的一部分**。
+React 会记住你提供的 effect 函数，并且会在 <u>每次更改作用于 DOM 并让浏览器绘制屏幕后，去调用它</u> -- **概念上，你可以想象 effects 是渲染结果的一部分**。
 
 
 
 ### 总结：
 
-**在组件内什么时候去读取 props 或者 state 是无关紧要的**。因为它们不会改变。在单次渲染的范围内，props 和 state 始终保持不变。
+**在组件内什么时候去读取 props 或者 state 是无关紧要的。因为它们不会改变。** 在单次渲染的范围内，props 和 state 始终保持不变。
 
 <img src="/../img/assets_2019/:Users:haoling:Library:Application Support:typora-user-images:image-20220822213608238.png" alt="image-20220822213608238" style="zoom:80%;" />
 
@@ -130,7 +130,7 @@ function Example() {
 
 React 只会 **在浏览器绘制后，运行 effects**。这使得你的应用更流畅，因为大多数 effects 并不会阻塞屏幕的更新；
 
-Effect 的清除同样被延迟了 --> **上一次的 effect 会在重新渲染后被清除**
+Effect 的清除同样被延迟了 --> **上一次的 effect 会在重新渲染后，执行这次的 effects 前被清除**
 
 案例：假设第一次渲染的时候`props`是`{id: 10}`，第二次渲染的时候是`{id: 20}`。
 
@@ -148,7 +148,7 @@ Effect 的清除同样被延迟了 --> **上一次的 effect 会在重新渲染�
 
 
 
-## React 核心是同步，是目的， 而非生命周期
+## React 核心是同步， 而非生命周期
 
 React 会根据我们当前的 props 和 state 同步到 DOM。“mount” 和 “update” 这种生命周期之于渲染并没有什么区别；
 
@@ -174,9 +174,9 @@ useEffect 的设计意图就是要 **强迫你关注数据流的改变**，然�
 
 ##### 一些移除依赖的小技巧：
 
-###### 1、让Effects自给自足
+###### 1、让Effects自给自足 -> 善用 setState(c => c+1) 这种函数形式
 
-案例 [错误的依赖](https://codesandbox.io/s/q3181xz1pj?file=/src/index.js:303-330)： 将 count +1 改为 setState 的函数形式后，就不需要再依赖 count
+案例 [错误的依赖](https://codesandbox.io/s/q3181xz1pj?file=/src/index.js:303-330)： 将原本的 `count +1` 改为 `setState 的函数形式` 后，就不需要再依赖 count
 
 ```react
 function Counter() {
@@ -190,18 +190,20 @@ function Counter() {
       }, 1000);
       return () => clearInterval(id);
     }, [
-      // count  
+      // count  // 原本需要依赖 count，现在可以注释掉了
     ]);
   return <h1>{count}</h1>;
 }
 ```
 
-###### 2、函数式更新 - 只在effects中传递最小的信息会很有帮助（比较难理解，先记住吧）
+###### 2、函数式更新 - 只在effects中传递最小的信息会很有帮助（能理解，但是没实际用过）
 
-案例 [定时器](https://codesandbox.io/s/zxn70rnkx?file=/src/index.js)：当你想更新一个状态，并且这个状态更新依赖于另一个状态的值时，你可能需要用 useReducer 去替换它们
+当你想更新一个状态，并且这个状态更新依赖于另一个状态的值时，你可能需要用 useReducer 去替换它们
 
-- reducer可以让你 **把组件内发生了什么 ( actions ) 和状态如何响应并更新分开表述。**
+- reducer可以让你 **把 `组件内发生了什么` ( actions ) 和 `状态如何响应并更新` 分开表述。**
 - 之前渲染中的 reducer 能知道新的 props，因为 dispatch 的时候，React 记住的是 action，下一次渲染时再调用 reducer，新的props 就能被访问到，reducer 的调用不是在 effect 里面
+
+案例 [定时器](https://codesandbox.io/s/zxn70rnkx?file=/src/index.js)：假如不想在step改变后重启定时器：[使用 reducer](https://codesandbox.io/s/xzr480k0np)，effect不再关心怎么更新状态，它只负责告诉我们发生了什么
 
 ```react
 function Counter() {
@@ -224,12 +226,12 @@ function Counter() {
 }
 ```
 
-假如不想在step改变后重启定时器：[使用 reducer](https://codesandbox.io/s/xzr480k0np)，effect不再关心怎么更新状态，它只负责告诉我们发生了什么
+改为：
 
 ```react
 
 function Counter() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState); // 在这里使用 reducer
   const { count, step } = state;
 
   useEffect(() => {
@@ -308,14 +310,14 @@ useEffect(() => {
 
 1、如果一个函数没有使用组件内的任何值，你应该 **把它提到组件外面去定义**，然后就可以自由地在effects中使用
 
-案例：移到组件外面后，不用再添加依赖，因为它们不在渲染范围内，因此不会被数据流影响
+案例：移到组件外面后，<u>不用再添加依赖</u>，因为它们不在渲染范围内，因此不会被数据流影响
 
 <img src="/../img/assets_2019/:Users:haoling:Library:Application Support:typora-user-images:image-20220823221249581.png" alt="image-20220823221249581" style="zoom:80%;" />
 
 2、包装成 useCallback - 本质上是添加了一层依赖检查， **使函数本身只在需要的时候才改变，而不是去掉对函数的依赖**
 
 - **useCallback 保证了如果一个函数的输入改变了，这个函数就改变了。如果没有，函数也不会改变。**
-- 当我们需要将函数传递下去并且函数会在子组件的 effect 中被调用的时候，`useCallback` 是很好的技巧且非常有用；但是想强调的是，到处使用`useCallback`是件挺笨拙的事。
+- 当我们需要将函数传递下去，并且函数会在子组件的 effect 中被调用时，`useCallback` 是很好的技巧且非常有用；但是想强调的是，到处使用`useCallback`是件挺笨拙的事。
 
 案例：如果 query 保持不变，getFetchUrl 也会保持不变，effect 就不会重新运行
 
