@@ -7,7 +7,7 @@ author:
 header-img: 
 catalog: true
 tags:
-    - < vue2相关知识点 >
+    - < vue相关知识点 >
 typora-root-url: ..
 ---
 
