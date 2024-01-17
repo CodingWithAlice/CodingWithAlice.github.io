@@ -85,7 +85,7 @@ function GetWebData(URL){
     xhr.ontimeout = function(e) { console.log('ontimeout') }
     xhr.onerror = function(e) { console.log('onerror') }
  
-	//3: 打开请求
+	//3: 创建请求
     xhr.open('Get', URL, true);// 创建一个 Get 请求, true - 采用异步
  
      // 4: 配置参数

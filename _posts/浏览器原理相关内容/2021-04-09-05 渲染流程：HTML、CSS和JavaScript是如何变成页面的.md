@@ -79,7 +79,7 @@ CSS样式来源主要有三种：
 
 1、**`display:none` 的节点不会被加入 `Render Tree`，而 `visibility: hidden` 则会**，所以，如果某个节点最开始是不显示的，设为 `display:none` 是更优的。
 
-2、**`display:none` 会触发 `reflow`，而 `visibility:hidden` 只会触发 `repaint`**，因为没有发现位置变化。
+2、**`display:none` 会触发 `reflow`，而 `visibility:hidden` 只会触发 `repaint`**，因为没有发生位置变化。
 
 3、有些情况下，比如修改了元素的样式，浏览器 **并不会立刻 `reflow`  或 `repaint`** 一次，而是会把这样的操作积攒一批，然后做一次 `reflow`，这又叫异步 `reflow` 或增量异步 `reflow`。
 
@@ -97,7 +97,7 @@ CSS样式来源主要有三种：
     <img src="/../img/assets_2019/image-20210410135850074.png" alt="image-20210410135850074" style="zoom:25%;" />
 
 - 2、**需要剪裁**（clip）的地方
-    
+  
     内容超出了元素的大小，例如div固定宽高后放入许多文字，渲染引擎会为文字部分单独创建一个层，如果出现滚动条，滚动条也会被提升为单独的层
     
     <img src="/../img/assets_2019/image-20210410135912798.png" alt="image-20210410135912798" style="zoom:50%;" />
