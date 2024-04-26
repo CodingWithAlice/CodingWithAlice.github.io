@@ -13,6 +13,8 @@ typora-root-url: ..
 
 # 18-2 Promise和setTimeout
 
+[可执行代码链接](https://github.com/CodingWithAlice/init-my/blob/master/src/assets/%E6%89%8B%E6%92%95/promiseSettimeout.html)
+
 #### 第一步：sleep函数的实现（借由 setTimeout）
 
 ##### 先深入理解`setTimeout` 函数
