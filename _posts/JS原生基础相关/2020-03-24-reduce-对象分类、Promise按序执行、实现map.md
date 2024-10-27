@@ -102,14 +102,14 @@ var new_array = arr.map(function callback(currentValue[, index[, array]]) {
 Array.prototype.mapUsingReduce = function (callback, thisArg) {
     // 『this 就是调用该函数的数组』：this instanceof Array =》 true
     return this.reduce(function (pre, cur, index, array) {
-        // 『reduce 的第四个参数是调用数组本身』
+        // reduce 的第四个参数是调用数组本身
         pre[index] = callback.call(thisArg, cur, index, array);
         return pre;
     }, []);
 };
 ```
 
-🆚  `reduce` 会跳过 `empty` 的数组项（`null`、`undefined`、`’‘` 都不会跳过）如下图
+🆚 『 <u>`reduce` （`filter`、`map`、`forEach`）会跳过 `empty` 的数组项</u>』（`null`、`undefined`、`’‘` 都不会跳过）如下图
 
 ```js
 Array.prototype.mapUsingReduce = function (callback, thisArg) {
