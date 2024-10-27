@@ -8,7 +8,7 @@ header-img:
 catalog: true
 tags:
     - < CSS相关内容 >
-    - < LTN1 >
+    - < LTN2 >
 typora-root-url: ..
 ---
 
