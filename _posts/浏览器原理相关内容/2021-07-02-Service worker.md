@@ -13,9 +13,7 @@ typora-root-url: ..
 
 # Service worker
 
-参考文章：[浏览器架构](https://xie.infoq.cn/article/5d36d123bfd1c56688e125ad3)
-
-定义/作用：一种可以 web 开发者控制缓存的技术
+Service Worker 是一种在 Web 浏览器后台运行的脚本，它可以拦截和处理网络请求、实现离线缓存、推送通知等功能。
 
 注意：Service worker 中的代码是运行在**渲染进程**中的
 

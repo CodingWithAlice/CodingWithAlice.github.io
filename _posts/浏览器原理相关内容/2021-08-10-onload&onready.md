@@ -19,46 +19,26 @@ typora-root-url: ..
 2. 加载外部 js 脚本和样式表文件；（预扫描）
 3. 解析并执行 js 脚本；
 4. dom树构建完成 - html 解析完毕（完成后触发 `onready` -> 即 `DOMContentLoaded`）；
+
+    DOMContentLoaded 定义：当纯HTML被完全加载以及解析时，会被触发，而**不必等待样式表，图片或者子框架完成加载**
 5. 加载图片等外部文件（完成后触发 图片 `onload`）；
 6. 页面加载完毕（完成后触发 页面 `onload`）
 
+    onload 定义：在页面或图像**加载完成**后立即发生
+
+```js
+document.addEventListener('DOMContentLoaded', (event) => {
+    console.log('DOM fully loaded and parsed'); // 译者注："DOM完全加载以及解析"
+});
+window.onload = function() {console.log('SomeJSCode')}
+```
+
+| 区别     | DOMContentLoaded / onready                         | onload                                          |
+| -------- | -------------------------------------------------- | ----------------------------------------------- |
+| 执行时机 | 在 `html` **解析完毕** 后执行                      | 在页面 **所有元素（图片+页面）加载完成** 后执行 |
+| 执行次数 | onready **可以执行多个**，并且都可以按顺序得到执行 | 只执行最后一个                                  |
 
 
-
-- DOMContentLoaded 和 onload 的区别：
-
-    |          | DOMContentLoaded                              | onload                                              |
-    | -------- | --------------------------------------------- | --------------------------------------------------- |
-    | 执行时机 | 在 `html` **解析完毕** 后执行                 | 在页面 **所有元素（包括图片+页面）加载完成** 后执行 |
-    | 执行次数 | onready可以执行多个，并且都可以按顺序得到执行 | 只执行最后一个                                      |
-
-    
-
-- DOMContentLoaded / onready
-
-    定义：当纯HTML被完全加载以及解析时，会被触发，而不必等待样式表，图片或者子框架完成加载
-
-    ```js
-    document.addEventListener('DOMContentLoaded', (event) => {
-        console.log('DOM fully loaded and parsed'); // 译者注："DOM完全加载以及解析"
-    });
-    ```
-    
-- onload
-
-    定义：在页面或图像加载完成后立即发生
-
-    ```html
-    <!-- html中 -->
-    <body onload="SomeJSCode"></body>
-    ```
-
-    ```js
-    // js 中
-    window.onload = function() {console.log('SomeJSCode')}
-    ```
-
-    
 
 拼多多笔试题：
 
