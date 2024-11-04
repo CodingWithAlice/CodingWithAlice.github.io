@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:     reduce-对象分类、Promise按序执行、实现map
+title:     对象分类、Promise按序执行、实现map
 subtitle:  
 date:       2020-07-07
 author:     
@@ -12,7 +12,7 @@ tags:
 typora-root-url: ..
 ---
 
-# reduce-对象分类、Promise按序执行、实现map
+# 对象分类、Promise按序执行、实现map
 
 ![image-20241023104802308](/../img/assets_2023/image-20241023104802308.png)
 
@@ -52,6 +52,8 @@ var res = groupBy(arr, 'age');
 
 ##### 案例2：按序运行 `Promise`
 
+注意：『<u>reduce 中 pre 的值需要在函数体中使用 `return pre` 返回</u>』
+
 ```javascript
 let p1 = a => new Promise((resolve, reject) => {resolve(a * 1);});
 let p2 = a => new Promise((resolve, reject) => {resolve(a * 2);});
@@ -60,11 +62,11 @@ let f3 = a => a * 3;
 const promiseArr = [p1, p2, f3, p4];
 processArray(promiseArr, 1).then((res) => {console.log(res)});   // 24
 
-// 方法一：『直接使用 then - pre.then(cur)』
+// 方法一：直接使用 then - pre.then(cur)
 function processArray(arr, initialValue) {
     return arr.reduce((pre, cur) => pre.then(cur), Promise.resolve(initialValue));
 }
-// 方法二：『使用 async/await - cur(await pre)』
+// 方法二：使用 async/await - cur(await pre)
 function processArray(arr, initialValue) {
     return arr.reduce(async (pre, cur, index) => {
         return cur(await pre);
@@ -87,6 +89,8 @@ function processArray(arr, initialValue) {
 
 ##### 案例3：使用reduce实现map
 
+注意：『<u>reduce遍历数组时会忽略 empty，所以使用 `pre[index]`更准确</u>』
+
 ```js
 // map - 一个由原数组每个元素执行回调函数的结果组成的新数组
 var new_array = arr.map(function callback(currentValue[, index[, array]]) {
@@ -100,7 +104,7 @@ var new_array = arr.map(function callback(currentValue[, index[, array]]) {
 ); // [5, 7, , 10]
 
 Array.prototype.mapUsingReduce = function (callback, thisArg) {
-    // 『this 就是调用该函数的数组』：this instanceof Array =》 true
+    // this 就是调用该函数的数组：this instanceof Array =》 true
     return this.reduce(function (pre, cur, index, array) {
         // reduce 的第四个参数是调用数组本身
         pre[index] = callback.call(thisArg, cur, index, array);

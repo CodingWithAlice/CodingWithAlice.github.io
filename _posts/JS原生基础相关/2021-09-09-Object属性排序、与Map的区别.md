@@ -14,7 +14,7 @@ typora-root-url: ..
 
 ## Object属性排序、与Map的区别
 
-【注释】：
+<img src="/../img/assets_2023/image-20241103200316638.png" alt="image-20241103200316638" style="zoom:23%;" />
 
 ##### 1、Object 中各属性排序规则
 
