@@ -8,7 +8,7 @@ header-img:
 catalog: true
 tags:
     - < JS原生基础相关 >
-    - < LTN1 >
+    - < LTN2 >
 typora-root-url: ..
 ---
 
@@ -18,7 +18,7 @@ typora-root-url: ..
 
 -  改变函数执行时的上下文 this
 
-- 第一个参数 **如果不传，则默认为全局对象 `window`**
+- 『第一个参数 **如果不传，则默认为全局对象 `window`**』
 
 
 ##### 区别
