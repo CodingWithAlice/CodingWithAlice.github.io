@@ -26,7 +26,7 @@ typora-root-url: ..
 | 相同浏览器 - 不同页面 | （页面属于相同域名和端口）可以共享 | 无法共享数据                                      |
 | 相同浏览器 - 同源页面 | 可以共享                           | 可以共享                                          |
 
-【补充：什么事同源】：
+【补充：什么是同源】：
 
 `http://www.test.com`
 
@@ -45,10 +45,10 @@ typora-root-url: ..
 |  API列表   | 入参                 |             功能             | 举例说明                                                     |
 | :--------: | -------------------- | :--------------------------: | ------------------------------------------------------------ |
 |   clear    | /                    | 清空存储中的所有本地存储数据 | `localStorage.clear();`                                      |
-|  getItem   | 参数key              |    获取对应key的本地存储     | `localStorage.getItem('gjxm');`<br/>// 对象访问方式同样有效<br/>`localStorage.gjxm = '51129';`<br/>`localStorage.gjxm;// 51129 ` |
+|  getItem   | 参数key              |    获取对应key的本地存储     | `localStorage.getItem('cat');`<br/>`localStorage.gjxm = 'aqiu';` |
 |    key     | 整数索引             |  返回对应本地存储中索引的键  | `localStorage.key(0);`                                       |
-| removeItem | 参数key              |    删除对应本地存储的key     | `localStorage.removeItem('gjxm')；`                          |
-|  setItem   | 两个参数，key和value | 如果不存在则添加，存在则更新 | `localStorage.setItem('gjxm', 'zzh');`                       |
+| removeItem | 参数key              |    删除对应本地存储的key     | `localStorage.removeItem('cat')；`                           |
+|  setItem   | 两个参数，key和value | 如果不存在则添加，存在则更新 | `localStorage.setItem('cat', 'aqiu');`                       |
 
 
 **枚举** `localStorage` 的方法：
