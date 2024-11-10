@@ -113,7 +113,7 @@ Array.prototype.mapUsingReduce = function (callback, thisArg) {
 };
 ```
 
-🆚 『 <u>`reduce` （`filter`、`map`、`forEach`）会跳过 `empty` 的数组项</u>』（`null`、`undefined`、`’‘` 都不会跳过）如下图
+🆚 『 <u>`reduce` `filter`、`map`、`forEach`会跳过 `empty` 的数组项</u>』（`null`、`undefined`、`’‘` 都不会跳过）如下图
 
 ```js
 Array.prototype.mapUsingReduce = function (callback, thisArg) {
