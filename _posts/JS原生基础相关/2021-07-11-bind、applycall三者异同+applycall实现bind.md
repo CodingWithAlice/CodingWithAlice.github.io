@@ -8,7 +8,7 @@ header-img:
 catalog: true
 tags:
     - < JS原生基础相关 >
-    - < LTN2 >
+    - < LTN1 >
 typora-root-url: ..
 ---
 
@@ -18,7 +18,7 @@ typora-root-url: ..
 
 -  改变函数执行时的上下文 this
 
-- 『第一个参数 **如果不传，则默认为全局对象 `window`**』
+- 『<u>第一个参数 **如果不传，则默认为全局对象 `window`**</u>』
 
 
 ##### 区别
@@ -45,10 +45,11 @@ let a = function () {console.log(this.p + 1)}
 a.fakeBind({ p: 100 })();
 a.bind({ p: 8 })();
 
-Function.prototype.fakeBind = function (context) {
+Function.prototype.fakeBind = function (thisArg, ...args1) {
     const func = this; // this 指向调用该原型函数的对象 - 也就是调用函数 a
-    const args = [].slice.call(arguments, 1); // 『获取调用 fakeBind 时传入的参数』
-    return () => func.apply(context, [...args, ...arguments]);
+    return function(...args2){
+         func.apply(thisArg, [...args1, ...args2])
+    };
 }
 ```
 
