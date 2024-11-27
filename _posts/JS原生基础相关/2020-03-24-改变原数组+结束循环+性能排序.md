@@ -8,7 +8,7 @@ header-img:
 catalog: true
 tags:
     - < JS原生基础相关 >
-    - < LTN2 >
+    - < LTN3 >
 typora-root-url: ..
 ---
 
