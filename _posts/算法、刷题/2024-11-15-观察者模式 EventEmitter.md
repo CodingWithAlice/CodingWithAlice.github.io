@@ -56,25 +56,27 @@ class EventEmitter {
             // 删除某个类别的事件
             if(!listener) {
                 delete this.events[event];
-            }
-            // 删除某个回调
-            let index = this.events[event].indexOf(listener);
-            if (index > -1) {
-                this.events[event].splice(index, 1);
+            } else {
+                // 删除某个回调
+                let index = this.events[event].indexOf(listener);
+                if (index > -1) {
+                    this.events[event].splice(index, 1);
+                }
             }
         }
     }
     once(event, listener) {
-        let newLis = (...args) => {
+        let self = this;
+        let newLis = function (...args){
             listener(...args);
-            this.removeListener(event, newLis);
+            self.removeListener(event, newLis);
         }
         this.addListener(event, newLis);
     }
     emit(event) {
         [].shift.call(arguments);
         if (this.events[event]) {
-            let staticEvents = [...this.events[event]];
+            let staticEvents = [...this.events[event]]; // once导致 events动态变化造成异常
             staticEvents.forEach((it, index) => it(arguments[index]))
         } else {
             return false
