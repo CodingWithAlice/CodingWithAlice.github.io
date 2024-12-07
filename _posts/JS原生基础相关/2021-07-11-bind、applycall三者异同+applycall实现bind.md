@@ -37,7 +37,7 @@ let min = Math.min.apply(null, array);
 
 <img src="/../img/assets_2019/image-20210712095024074.png" alt="image-20210712095024074" style="zoom:40%;" />
 
-##### 用 apply/call 实现bind
+##### 用 apply/call 实现bind - 注意构造函数的处理
 
 ```js
 var p = 1;
@@ -47,8 +47,12 @@ a.bind({ p: 8 })();
 
 Function.prototype.fakeBind = function (thisArg, ...args1) {
     const func = this; // this 指向调用该原型函数的对象 - 也就是调用函数 a
-    return function(...args2){
-         func.apply(thisArg, [...args1, ...args2])
+    return function F(...args2){
+        // 判断是否用于构造函数
+        if (func instanceof F) {
+            return new func(...args1, ...args2);
+        }
+        func.apply(thisArg, [...args1, ...args2])
     };
 }
 ```
