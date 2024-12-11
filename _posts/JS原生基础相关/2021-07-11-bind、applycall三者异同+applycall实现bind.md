@@ -39,6 +39,12 @@ let min = Math.min.apply(null, array);
 
 ##### 用 apply/call 实现bind - 注意构造函数的处理
 
+常见错误：
+
+- new 时 this 就应该指向实例 - 判断的是调用的func
+
+    <img src="/../../30ReactReact/image-20241208122745984.png" alt="image-20241208122745984" style="zoom:30%;" />
+
 ```js
 var p = 1;
 let a = function () {console.log(this.p + 1)}

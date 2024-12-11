@@ -26,13 +26,27 @@ typora-root-url: ..
 
 常见错误：
 
+1、constructor：super()只在派生类中使用，这是定义的基类
+
 <img src="/../img/assets_2023/image-20241204184401713.png" alt="image-20241204184401713" style="zoom:40%;" />
+
+2、remove：如果 listener为null，删除整个 event 列表
 
 <img src="/../img/assets_2023/image-20241204185039520.png" alt="image-20241204185039520" style="zoom:35%;" />
 
+3、once：①简单的包裹函数实现执行+删除②由于 newLis 函数使用箭头函数定义，this = 外部this
+
 <img src="/../img/assets_2023/image-20241204185322848.png" alt="image-20241204185322848" style="zoom:30%;" />
 
+4、emit：①this.events[event] 每次都是在this重新查询，有once添加的函数时，会导致遍历 index 对不齐
+
 <img src="/../img/assets_2023/image-20241204185654244.png" alt="image-20241204185654244" style="zoom:30%;" />
+
+​	②记得对 emit 传入的参数进行处理	
+
+<img src="/../img/assets_2023/image-20241210180150829.png" alt="image-20241210180150829" style="zoom:30%;" />
+
+
 
 ```js
 // 写到第三遍，相对完善的写法
@@ -77,7 +91,9 @@ class EventEmitter {
         [].shift.call(arguments);
         if (this.events[event]) {
             let staticEvents = [...this.events[event]]; // once导致 events动态变化造成异常
-            staticEvents.forEach((it, index) => it(arguments[index]))
+             staticEvents.forEach((it, index) => {
+                        let args = arguments[index];
+                        Array.isArray(args) ? it(...args) : it(args);
         } else {
             return false
         }
@@ -100,7 +116,7 @@ var listener = function (args) {
 emitter1.once('click', onceListener);
 emitter1.addListener('click', listener);
 
-emitter1.emit('click', '参数');
+emitter1.emit('click', ['参数']);
 emitter1.emit('click');
 
 emitter1.removeListener('click', listener);
