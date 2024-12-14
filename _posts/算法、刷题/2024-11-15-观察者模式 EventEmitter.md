@@ -30,9 +30,11 @@ typora-root-url: ..
 
 <img src="/../img/assets_2023/image-20241204184401713.png" alt="image-20241204184401713" style="zoom:40%;" />
 
-2、remove：如果 listener为null，删除整个 event 列表
+2、remove：如果 listener为null，删除整个 event 列表 + index>-1再删除
 
 <img src="/../img/assets_2023/image-20241204185039520.png" alt="image-20241204185039520" style="zoom:35%;" />
+
+<img src="/../img/assets_2023/image-20241214162410391.png" alt="image-20241214162410391" style="zoom:30%;" />
 
 3、once：①简单的包裹函数实现执行+删除②由于 newLis 函数使用箭头函数定义，this = 外部this
 
@@ -73,29 +75,27 @@ class EventEmitter {
             } else {
                 // 删除某个回调
                 let index = this.events[event].indexOf(listener);
-                if (index > -1) {
-                    this.events[event].splice(index, 1);
-                }
+                index > -1 && this.events[event].splice(index, 1);
             }
         }
     }
     once(event, listener) {
-        let self = this;
-        let newLis = function (...args){
+        let onceFun = (...args) => {
             listener(...args);
-            self.removeListener(event, newLis);
+            this.removeEventListener(event, onceFun);
         }
-        this.addListener(event, newLis);
+        this.addListener(event, onceFun);
     }
     emit(event) {
-        [].shift.call(arguments);
-        if (this.events[event]) {
-            let staticEvents = [...this.events[event]]; // once导致 events动态变化造成异常
-             staticEvents.forEach((it, index) => {
-                        let args = arguments[index];
-                        Array.isArray(args) ? it(...args) : it(args);
+        if (!this.events[event]) {
+            return false;
         } else {
-            return false
+            let static = [...this.events[event]]; // once导致 events动态变化造成异常
+            let argsList = [].shift.call(arguments);
+            static.forEach((it, index) => {
+                let args = argsList[index];
+                Array.isArray(args) ? it(...args) : it(args);
+            })
         }
     }
     setMaxListeners(n) {

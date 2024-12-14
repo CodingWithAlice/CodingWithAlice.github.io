@@ -8,7 +8,7 @@ header-img:
 catalog: true
 tags:
     - < JS原生基础相关 >
-    - < LTN2 >
+    - < LTN1 >
 typora-root-url: ..
 ---
 
@@ -41,9 +41,11 @@ let min = Math.min.apply(null, array);
 
 常见错误：
 
-- new 时 this 就应该指向实例 - 判断的是调用的func
+- 1、new 时 this 就应该指向实例 - 判断的是调用的func
 
     <img src="/../../30ReactReact/image-20241208122745984.png" alt="image-20241208122745984" style="zoom:30%;" />
+    
+- 2、第一个参数是 context，记得传啊 + 构造函数需要返回实例，所以用 return
 
 ```js
 var p = 1;
