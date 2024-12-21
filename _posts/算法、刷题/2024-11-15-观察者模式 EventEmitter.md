@@ -40,7 +40,7 @@ typora-root-url: ..
 
 <img src="/../img/assets_2023/image-20241204185322848.png" alt="image-20241204185322848" style="zoom:30%;" />
 
-4、emit：①this.events[event] 每次都是在this重新查询，有once添加的函数时，会导致遍历 index 对不齐
+4、emit：①『<u>this.events[event] 每次都是在this重新查询，有once添加的函数时，会导致遍历 index 对不齐</u>』
 
 <img src="/../img/assets_2023/image-20241204185654244.png" alt="image-20241204185654244" style="zoom:30%;" />
 

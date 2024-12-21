@@ -8,7 +8,7 @@ header-img:
 catalog: true
 tags:
     - < 算法题 >
-    - < LTN1 >
+    - < LTN2 >
 typora-root-url: ..
 ---
 
@@ -22,8 +22,8 @@ typora-root-url: ..
 
 ```js
 function fakeInstanceof(target, constructor) {
+    // let cur = target.__proto__;
     let proto = Object.getPrototypeOf(target);
-    // let proto = target.__proto__;
     while (proto) { // 使用递归也可以
         if (proto === constructor.prototype) {
             return true
@@ -34,7 +34,26 @@ function fakeInstanceof(target, constructor) {
 }
 ```
 
+上述方案是使用 `while` 实现的，自己写的时候喜欢用递归
 
+-  Object.getPrototypeOf() 静态方法返回指定对象的原型（即内部 [[Prototype]] 属性的值
+
+```js
+function fakeInstanceof(target, constructor) {
+    let cur = target.__proto__;
+    // 相等
+    if (cur === constructor.prototype) {
+        return true
+    } else {
+        // 不相等，但是可以继续找下一层
+        if (cur.__proto__) {
+            return fakeInstanceof(cur, constructor)
+        }
+    }
+    // 都不相等，则为 false
+    return false
+}
+```
 
 
 

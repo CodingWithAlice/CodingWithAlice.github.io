@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:     React 相关基础知识
+title:     useContext
 subtitle:  
 date:       2022-11-13
 author:     
@@ -13,9 +13,7 @@ typora-root-url: ..
 
 
 
-# React 相关基础知识
-
-# 第五课
+# useContext
 
 ### Context - 无须明确地传遍每一个组件，就能将值深入传递进组件树
 
