@@ -8,7 +8,7 @@ header-img:
 catalog: true
 tags:
     - < 算法题 >
-    - < LTN2 >
+    - < LTN3 >
 typora-root-url: ..
 ---
 
