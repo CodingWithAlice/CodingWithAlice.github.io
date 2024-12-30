@@ -30,7 +30,7 @@ typora-root-url: ..
 
 <img src="/../img/assets_2023/image-20241204184401713.png" alt="image-20241204184401713" style="zoom:40%;" />
 
-2、remove：如果 listener为null，删除整个 event 列表 + index>-1再删除
+2、remove：如果 listener为null，删除整个 event 列表 + 注意： index>-1再删除
 
 <img src="/../img/assets_2023/image-20241204185039520.png" alt="image-20241204185039520" style="zoom:35%;" />
 
@@ -44,7 +44,7 @@ typora-root-url: ..
 
 <img src="/../img/assets_2023/image-20241204185654244.png" alt="image-20241204185654244" style="zoom:30%;" />
 
-​	②记得对 emit 传入的参数进行处理	
+​	②记得对 emit 传入的参数进行处理 + 注意：即使 args 不是数组，可能是字符串等类型，还是要传递给函数的
 
 <img src="/../img/assets_2023/image-20241210180150829.png" alt="image-20241210180150829" style="zoom:30%;" />
 
@@ -91,7 +91,7 @@ class EventEmitter {
             return false;
         } else {
             let static = [...this.events[event]]; // once导致 events动态变化造成异常
-            let argsList = [].shift.call(arguments);
+            let argsList = arguments.slice(1);
             static.forEach((it, index) => {
                 let args = argsList[index];
                 Array.isArray(args) ? it(...args) : it(args);
