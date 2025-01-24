@@ -8,7 +8,6 @@ header-img:
 catalog: true
 tags:
     - < database >
-    - < LTN1 >
 typora-root-url: ..
 ---
 
