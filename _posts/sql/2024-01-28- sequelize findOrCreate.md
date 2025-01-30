@@ -27,14 +27,14 @@ typora-root-url: ..
 
 ```js
 const [issue, created] = await WeekModal.findOrCreate({
-    where: { serialNumber: data.serialNumber },
-    defaults: data,
-})
-if (!created) {
-    issue.set(data);
-    // 如果已经存在，更新描述
-    await issue.save()
-}
-return NextResponse.json({ success: true, message: created ? '观察成功' : '更新成功' })
+			where: { serialNumber: data.serialNumber },
+			defaults: data,
+		})
+        if (!created) {
+            issue.set(data);
+			// 如果已经存在，更新描述
+			await issue.save()
+		}
+		return NextResponse.json({ success: true, message: created ? '观察成功' : '更新成功' })
 ```
 
