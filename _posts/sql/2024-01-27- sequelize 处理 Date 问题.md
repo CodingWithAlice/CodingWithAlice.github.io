@@ -37,22 +37,52 @@ Executing (default): SELECT `id`, `better`, `front`, `good1`, `good2`, `good3`, 
 
 直接查询 date field的时候，不一定查得到
 
-##### 解决方案： 对 date 进行区间查询
+##### 解决方案：
+
+##### 方法一【推荐】：对 date 进行区间查询
 
 ```js
-function transDateToWhereOptions(date: Date) {
-    // 日期转换 - startOf('date') 东八区自动减去 8小时
-    const dateObj = new Date(date)
-    const startDate = dayjs(dateObj).startOf('date').add(8, 'hours').toDate();
-    const endDate = dayjs(dateObj).add(1, 'day').startOf('date').add(8, 'hours').toDate();
+function transDateToWhereOptions(date: string) {
+	// 日期转换 - startOf('date') 东八区自动减去 8小时
+	const dateObj = new Date(date)
+	const startDate = dayjs(dateObj).startOf('date').add(8, 'hours').toDate()
+	const endDate = dayjs(dateObj).endOf('date').add(8, 'hours').toDate()
+	// 方法1：使用 Op.between 来匹配日期范围
+	const where2 = {
+		date: {
+			[Op.between]: [startDate, endDate],
+		},
+	}
 
-    return {
-        where: {
-            date: {
-                [Op.between]: [startDate, endDate],
-            },
-        },
-    }
+	return {
+		where: where2,
+	}
 }
+```
+
+推荐原因： 性能考虑 - 在有索引的情况下，对于大数据量的查询，**`Op.between` 通常性能最高**；`DATE` 函数次之；`DATE_FORMAT` 性能相对较差
+
+- `DATE_FORMAT`：数据库通常「无法使用索引来加速查询」。
+
+    因为函数会对索引列进行计算，使得数据库不能直接根据索引定位到符合条件的记录，**需要扫描整个表或者索引范围**，所以在大数据量的情况下，性能可能较差
+
+- `DATE`：DATE 函数相对 DATE_FORMAT 对索引的影响较小。如果 date 上有索引，数据库可以在一定程度上利用索引。因为 DATE 函数只是提取日期部分，操作相对简单，不会像 DATE_FORMAT 那样完全破坏索引的有序性，性能一般比 DATE_FORMAT 要好。
+
+- `[Op.between]`：如果 date_column 上有索引，**区间查询可以有效地利用索引**。数据库可以根据索引快速定位到区间的起始和结束位置，然后扫描索引范围内的记录，避免全表扫描。所以在合适的索引支持下，Op.between 的性能通常是比较高的。
+
+##### 方法二：将数据转换成 DATE 再匹配
+
+```js
+// 方法1：使用 DATE_FORMAT/DATE 来转换成 YYYY-MM-DD 匹配是否和 参数相等
+const where1 = Sequelize.where(
+    Sequelize.fn('DATE_FORMAT', Sequelize.col('date'), '%Y-%m-%d'),
+    '=',
+    date
+)
+const where3 = Sequelize.where(
+    Sequelize.fn('DATE', Sequelize.col('date')),
+    '=',
+    date
+)
 ```
 

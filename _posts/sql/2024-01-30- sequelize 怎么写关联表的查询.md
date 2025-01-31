@@ -24,18 +24,11 @@ const dailyTimeRecord = await TimeModal.findAll(options)
 const dailyIssueRecord = await IssueModal.findAll(options)
 ```
 
-使用 on 关联查询
+使用 on 关联查询 - 已关联的两张表，不需要再使用 on - 会默认添加 - 更方便管理
 
 ```js
 const weekData = await IssueModal.findAll({
-    include: [
-        {
-            model: TimeModal,
-            on: {
-                date: col('daily_issue_record.date'),
-            },
-        },
-    ],
+    include: [{model: TimeModal}]
 })
 ```
 

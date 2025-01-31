@@ -54,5 +54,31 @@ await DailyModal.bulkCreate(body?.data, {
 })
 ```
 
+补充
 
+详细看下 [sequelize.define 可以接收的第三个参数 - 常用配置属性](https://sequelize.org/docs/v6/core-concepts/model-basics/#model-definition)
+
+```js
+const User = sequelize.define('User', {
+    // 字段定义
+}, {
+    // 1、tableName - 指定数据库中的表名
+    tableName: 'users', // 指定表名为 'users'
+    // 2、timestamps - 是否自动添加 createdAt 和 updatedAt 字段，默认为 true
+    timestamps: false, // 禁用时间戳字段
+    // 3、paranoid - 启用软删除（即删除时不会真正删除数据，而是设置 deletedAt 字段），默认为 false
+    paranoid: true, // 启用软删除
+    // 4、underscored - 将字段名自动转换为下划线命名，默认为 false
+    underscored: true, // 将 createdAt 映射为 created_at
+    // 5、freezeTableName - 禁止 Sequelize 自动将表名转换为复数形式，默认为 false
+    freezeTableName: true, // 表名保持为 'User'，而不是 'Users'
+    // 6、indexes - 定义表的索引
+    indexes: [
+        {
+            unique: true,
+            fields: ['email'] // 在 email 字段上创建唯一索引
+        }
+    ]
+});
+```
 
