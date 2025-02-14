@@ -43,11 +43,11 @@ const weekData = await IssueModal.findAll({
 ```js
 // 关联关系
 IssueModal.hasMany(TimeModal, {
-	foreignKey: 'date',
+	foreignKey: 'date', // 多的键
 	sourceKey: 'date',
 })
 TimeModal.belongsTo(IssueModal, {
-	foreignKey: 'date',
+	foreignKey: 'date', // 多的键
 	targetKey: 'date',
 })
 ```
