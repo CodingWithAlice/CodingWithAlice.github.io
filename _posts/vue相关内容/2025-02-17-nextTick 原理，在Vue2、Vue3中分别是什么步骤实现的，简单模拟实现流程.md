@@ -55,9 +55,9 @@ if(typeof Promise !== 'undefined'){
     const obs = new MutationObserver(flushCallbacks); // 使用 MutationObserver 作为微任务
     let count = 1;
     const textNode = document.createTextNode(String(count));
-    obs.observe(textNode, { characterData: true });
+    obs.observe(textNode, { characterData: true }); // 监听目标节点的文本内容变化
     timeFunc = () => {
-        count = (count + 1) % 2;
+        count = count + 1;
         textNode.data = String(count);
     }
 } else if(typeof setImmediate !== 'undefined'){
@@ -111,7 +111,7 @@ new Vue({
 ```
 
 ```js
-—— Vue3 中的 nextTick 模拟实现
+// Vue3 中的 nextTick 模拟实现
 const queue = []; // 存储回调函数的队列
 let isFlushing = false; // 标记是否正在执行回调函数
 
@@ -134,7 +134,9 @@ function nextTick(cb) {
             }
             resolve();
         };
+        // step1：存储回调函数的队列
         queue.push(runner);
+        // step2：执行异步任务
         if (!isFlushing) {
             queueMicrotask(flushJobs);
         }
