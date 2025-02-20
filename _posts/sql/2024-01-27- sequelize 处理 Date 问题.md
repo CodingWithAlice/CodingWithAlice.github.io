@@ -17,6 +17,28 @@ typora-root-url: ..
 
 当设置的 date 类型是 DataTypes.Date 时，例如 ’2025-01-27‘
 
+总结：
+
+- 部署上线后，由于线上服务器的时间和本地可能存在差异，使用 dayjs.utc 解决
+
+```js
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+dayjs.extend(utc);
+
+function transOneDateToWhereOptions(date: string) {
+    const dateObj = new Date(date)
+    const startDate = dayjs.utc(dateObj).startOf('day').toDate()
+    const endDate = dayjs.utc(dateObj).endOf('day').toDate()
+    const where2 = {
+        date: {
+            [Op.between]: [startDate, endDate],
+        },
+    }
+    return where2
+}
+```
+
 ##### 问题
 
 需要查询时，发现 where: { date = ‘2025-1-27’ } 是找不到这个行数据的，sequelize 解析依赖于传递参数的 date 格式
@@ -43,7 +65,7 @@ Executing (default): SELECT `id`, `better`, `front`, `good1`, `good2`, `good3`, 
 
 ```js
 function transDateToWhereOptions(date: string) {
-	// 日期转换 - startOf('date') 东八区自动减去 8小时
+	// 日期转换 - startOf('date') 东八区自动减去 8小时 -> 使用 utc 解决
 	const dateObj = new Date(date)
 	const startDate = dayjs(dateObj).startOf('date').add(8, 'hours').toDate()
 	const endDate = dayjs(dateObj).endOf('date').add(8, 'hours').toDate()
