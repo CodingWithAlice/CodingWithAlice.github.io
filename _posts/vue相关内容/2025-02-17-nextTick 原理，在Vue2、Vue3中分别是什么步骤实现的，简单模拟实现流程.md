@@ -22,7 +22,7 @@ nextTick
 利用 JavaScript 的异步执行机制（如微任务、宏任务），将传入 nextTick 的回调函数延迟到 DOM 更新后执行
 
    - 原因：因为 Vue 的数据更新是异步执行的，当你修改数据时，Vue 不会立即更新 DOM，而是将这些更新操作放入一个队列中，等到「下一个事件循环」时再「批量更新」 DOM，所以需要 nextTick 来确保在 DOM 更新后再执行某些操作
-    - 实现步骤：
+        - 实现步骤：
         - 1、回调函数收集：nextTick 会将传入的回调函数收集到一个队列中
         - 2、异步执行方式选择：Vue 2 会根据不同的浏览器环境选择合适的异步执行方式，优先使用微任务（如 Promise、MutationObserver），如果不支持微任务则使用宏任务（如 setTimeout）
         - 3、触发异步执行：当第一次调用 nextTick 时，会触发异步执行，将队列中的回调函数在下次 DOM 更新循环结束后依次执行
@@ -39,9 +39,11 @@ nextTick
 const callbacks = []; 
 let pending = false;  // 标记是否正在执行回调函数
 function flushCallbacks(){ // 异步执行回调函数
-    pending = false;
+    pending = true; // 正在执行回调函数
     const copies = callbacks.slice(0);
+    callbacks.length = 0;
     copies.forEach(it => it());
+    pending = false;
 }
 
 // step2：根据当前浏览器环境，选择异步执行方式
@@ -71,7 +73,7 @@ if(typeof Promise !== 'undefined'){
     }
 }
 
-// step3: nextTick 函数
+// step3: nextTick 函数 - Vue2 有第二个参数 content
 function nextTick(cb, ctx) {
     let _resolve;
     // step1：存储回调函数的队列
@@ -84,7 +86,6 @@ function nextTick(cb, ctx) {
     })
     // step4：执行异步任务
     if(!pending){
-        pending = true; // 正在执行回调函数
         timeFunc();
     }
     // 如果没有传入回调函数，返回一个 Promise
