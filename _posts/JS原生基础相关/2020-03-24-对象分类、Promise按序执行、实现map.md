@@ -29,7 +29,42 @@ callback(prev, cur[, curIndex[, array]]);
 
 
 
-##### 案例1：按属性对Object进行分类
+#### 补充 reduce 配合 then/awync 使用的错误写法
+
+- 核心逻辑纠正： reduce 是一个同步方法，使用 async/then 会导致后续迭代可能在上一个异步还未执行时调用，出现数据更新不及时
+
+##### 错误写法1：reduce + async/await
+
+- 问题描述：reduce 中，splice 和 push 未生效
+- 原因：reduce 使用 async 时，会导致每个 reduce 迭代返回的是一个 promise，**后续的迭代会在前一个 promise 还未解决时就开始执行**，使得 initList 修改的操作在不同上下文中进行，导致数据执行不及时
+
+```js
+function execute(questList) { // 执行所有请求，返回所有响应
+    questList = transList(questList); // 闭包 -封装 index 和所有请求
+    let initList = questList.splice(0, 6); // 初始化6个
+    questList = questList.concat(Array(6)) // 补齐最后的空，方便执行完 Promise.race
+    return questList.reduce(async (pre, cur) => { ❌
+        const { key, value } = await Promise.race(initList.map(it => it.promise));
+        const resolvedIndex = initList.findIndex(it => +it.index === +key);
+        initList.splice(resolvedIndex, 1); // 移除已返回的 promise
+        pre[key] = value; // 存储响应值
+        !!cur && initList.push(cur); // 添加新的 promise
+        return pre;
+    }, [])
+}
+```
+##### 错误写法2：reduce + then
+
+- 问题：reduce 中，splice 和 push 依旧未生效
+- 原因：reduce 是一个同步方法，它的同步执行特性和异步操作 Promise.race 冲突，then方法会在未来的某个时刻执行 -> 如果 reduce 迭代到下一个元素时，then 方法可能还未执行，导致 reduce 无法获取到 then 更新后的累加器 pre，会继续使用上一次回调返回的原值值（上述写法里面没有在 then 外面返回 pre 累加器）
+
+<img src="/../img/assets_2025/image-20250307185524019.png" style="zoom:30%;" />
+
+
+
+
+
+#### 案例1：按属性对Object进行分类
 
 ```javascript
 var arr = [{ name: 'Q', age: 21 },{ name: 'I', age: 20 },{ name: 'Q', age: 20 }];
@@ -49,7 +84,7 @@ function groupBy(array, property) {
 var res = groupBy(arr, 'age');
 ```
 
-##### 案例2：按序运行 `Promise`
+#### 案例2：按序运行 `Promise`
 
 注意：『<u>reduce 中 pre 的值需要在函数体中使用 `return pre` 返回</u>』
 
@@ -86,7 +121,7 @@ function processArray(arr, initialValue) {
 
     <img src="/../img/assets_2023/image-20241023120944651.png" alt="image-20241023120944651" style="zoom:50%;" />
 
-##### 案例3：使用reduce实现map
+#### 案例3：使用reduce实现map
 
 注意：『<u>reduce遍历数组时会忽略 empty，所以使用 `pre[index]`更准确</u>』
 
