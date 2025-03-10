@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:     TS 基本知识梳理
+title:     TS 泛型函数/泛型接口/泛型约束、特性、type/keyof/enum/as/Partial
 subtitle:  
 date:       2022-10-19
 author:     
@@ -13,13 +13,58 @@ typora-root-url: ..
 
 
 
-# TS 基本知识梳理(泛型)
+# TS 泛型函数/泛型接口/泛型约束、特性、type/keyof/enum/as/Partial
 
-# 第四课
+总结：
 
-### 实际使用的补充
+- 几个重要的关键词 `type` `keyof` `enum`  `as`：
 
-1、`keyof` 操作符：
+    - type 类型别名：由 type 关键词创建 `type StringOrNumber = string | number`
+
+    - keyof 获取一个类型的属性名作为联合类型
+        - typeof 获取一个值的类型，用于帮助推导，和 keyof 联合使用： `keyof typeof Type`
+    - enum 用于定义一组命名常量的结构
+    - as 类型断言，将一个值强制转换为特定类型 `let length: number = (some as string).length`
+
+- 不同类型
+
+    - 条件类型：根据条件来选择不同的类型 `T extends U? X : Y`-如果T是U类型，则返回X，否则返回Y
+
+        ```js
+        type IsString<T> = T extends string? true : false;
+        ```
+
+    - 映射类型：根据现有类型创建新的类型，`Partial<T>`  将类型 T 中所有属性变为 **可选属性**
+
+    - 命名空间
+
+    - 装饰器
+
+- 泛型：本质是一个类型函数，输入 **类型参数**，和输出类型建立对应关系
+
+    ```js
+    // 1 泛型函数
+    function getCode<T>(arr: T[]): T { return arr[0] }
+    function getCode<T, U>(a: T, b: U): [T, U] { return [a, b] }
+    // 2 泛型接口
+    interface Coder<T> { contents: T, compare(v: T): number {} }
+    interface Coder { compare<T>(arg: T): T {} }
+    // 3 泛型约束 extends - 必须满足 {length: number} 接口的约束
+    function getCode<T extends {length: number}>(arg: T): number { return arg.length }
+    ```
+
+- 关键特性
+
+    - TS 是 **面向接口编程**，而不是面向对象编程 - 并不关心变量类型，只需要满足接口
+    - TS的代码只涉及类型，所有跟值相关的代码都由JS完成，**TS代码的编译过程**，实际上就是把“类型代码”全部拿掉，只保留“值代码”
+
+
+
+### 五、实际使用的补充
+
+#### 1、keyof VS typeof 比较
+
+【`keyof` 操作符】
 
 - 作用：用于获取一个类型的所有已知属性名，返回的结果是一个联合类型 --> 联合类型中的每个成员就是原始类型中属性的名称（作为字符串字面量类型）
 
@@ -32,7 +77,7 @@ interface Person {
 type PersonKeys = keyof Person; // PersonKeys 就是 "name" | "age" | "address"
 ```
 
-2、 `typeof` 操作符
+【 `typeof` 操作符】
 
 两种主要用法：
 
@@ -44,10 +89,13 @@ const myObj = {
     prop1: "hello",
     prop2: 10
 };
-type MyObjType = typeof myObj; // MyObjType 被推导为 { prop1: string; prop2: number; } - 和 myObj 对应
+type MyObjType = typeof myObj; // MyObjType 被推导为 { prop1: string; prop2: number; }
 ```
 
-3、组合使用 keyof 、 typeof
+【组合使用 keyof 、 typeof】
+
+- `keyof typeof Type`：先 typeof 获取类型结构；再 keyof 获取类型结构的所有属性名称
+- `as keyof typeof Type` ：as 强制类型转换
 
 ```tsx
 enum Type {
@@ -58,29 +106,26 @@ keyof typeof Type; // 先通过 typeof 获取到 Type 的结构类型，再通�
 key as keyof typeof Type; // as 进行断言(强制类型转换的安全写法)，key 只能是 Type 所有属性名称组成的联合类型其中之一，即 "READ" | "STUDY"
 ```
 
+#### 2、Partial
+
+是 TS 提供的内置工具类型
+
+`Partial<T>`：将类型 `T` 中的所有属性变为可选属性
+
 
 
 ### 一、泛型 
 
-##### 前因
+解决问题：主要是为了解决类型声明时，函数 **返回值类型** 和 **参数类型** 是相关的
 
-主要是为了解决类型声明时，函数返回值的类型和参数类型是相关时，无法反映出参数和返回值之间的类型关系。
-
-##### 特点
-
-带有“类型参数” - 函数名后面尖括号的部分`<T>`，就是类型参数。
-
-泛型可以理解成一段类型逻辑，需要类型参数来表达。
+特点：【**类型参数**】- 函数名后面尖括号的部分`<T>`
 
 ##### 本质
 
-泛型本质上是一个类型函数，通过输入类型参数，可以在输入类型与输出类型之间，建立一一对应关系。
+泛型本质上是一个 **类型函数**，通过输入类型参数，可以在 **输入类型** 与 **输出类型** 之间，建立一一对应关系
 
-##### 注意⚠️
-
-可以设置类型参数的默认值，但是 TypeScript 会从实际参数推断 T 的值，**覆盖掉默认值**，所以不会报错。
-
-​	 —> 只是在这种调用时才知道 T 的类型的情况下不报警。如果是实例化一个泛型类，设置了默认类型后，再调用时如果不符合类型校验，是会报错的
+- 注意：可以设置类型参数的默认值，但是 TypeScript 会从实际参数推断 T 的值，**覆盖掉默认值**，不会报错
+    - 只是在这种调用时才知道 T 的类型的情况下不报警 - 如果是实例化一个泛型类，设置了默认类型后，再调用时如果 **不符合类型校验，是会报错的**
 
 ```js
 // 函数的参数类型是 T[]，返回值的类型是 T
@@ -94,9 +139,9 @@ getCode([1, 2, 3]); // 不会报错，T的类型被推断为 number，覆盖掉�
 
 
 
-有个热知识：ts 是一种鸭子类型的语言，面向接口编程，而不是面向对象编程 -> **其实 ts 并不关心变量是什么类型，只要满足接口的都可以**
+有个热知识：ts 是一种鸭子类型的语言，**面向接口编程**，而不是面向对象编程 -> **其实 ts 并不关心变量是什么类型，只要满足接口的都可以**
 
-- 看下面的案例，最常用的 useState 的函数签名如下，函数后面的 <S>  表示泛型占位符，字母是什么不重要，但是在后面使用的时候，表示入参是 S 类型，输出也是 S
+- 看下面的案例，最常用的 useState 的函数签名如下，函数后面的 `<S> 表示泛型占位符`，字母是什么不重要，但是在后面使用的时候，表示入参是 S 类型，输出也是 S
 
 <img src="/../img/assets_2019/:Users:haoling:Library:Application Support:typora-user-images:image-20221020091529232.png" alt="image-20221020091529232" style="zoom:50%;" />
 
@@ -104,114 +149,75 @@ getCode([1, 2, 3]); // 不会报错，T的类型被推断为 number，覆盖掉�
 
 #### 常见写法
 
-泛型通常使用在 函数、接口和类、别名中，以下是不同场景中的写法：
-
-1. ##### 函数中
+泛型通常使用在 函数、变量、接口和类、别名中，以下是不同场景中的写法：
 
 ```js
-// 泛型函数 - 类型参数放在尖括号中，写在函数名后面
-function getCode<T>(arg: T): T {
-    return arg;
-}
+// 1、泛型函数 - 类型参数放在尖括号中，写在函数名后面
+function getCode<T>(arg: T): T { return arg }
 ```
 
-变量形式定义的函数
-
 ```js
-// 两种写法
+// 2、变量形式定义的函数 - 两种写法
 let myCode1: <T>(arg: T) => T = getCode;
 let myCode2: { <T>(arg: T): T } = getCode;
 ```
 
-2. ##### 接口中
+3、接口中
 
-第一种写法：类型参数定义在整个接口，接口内部的所有属性/方法都可以使用该类型参数
+- 第一种写法：**类型参数** 定义在整个接口，接口内部的所有属性/方法都可以使用该类型参数
 
 ```typescript
-interface Code<Type> {
-    contents: Type;
-}
+interface Code<Type> { contents: Type }
 // 泛型接口，调用时需要给出类型参数的值
 let code: Code<string>;
-```
 
-```typescript
 // 另一个例子 - 将接口中泛型的写法，结合类使用
-interface Comparator<T> {
-    compareTo(value: T): number;
-}
-
+interface Comparator<T> { compareTo(value: T): number }
 class Rectangle implements Comparator<Rectangle> {
-    compareTo(value: Rectangle): number {
-        // ...
-    }
+    compareTo(value: Rectangle): number {}
 }
 ```
 
-第二种写法：将类型参数定义在接口的某个方法之中，其他属性/方法不能使用该类型参数
+- 第二种写法：将类型参数定义在接口的某个方法之中，其他属性/方法不能使用该类型参数
 
 ```typescript
-interface Fn {
-    <T>(arg: T): T;
-}
-function getCode<T>(arg: T): T {
-    return arg;
-}
+interface Fn { <T>(arg: T): T }
+function getCode<T>(arg: T): T { return arg }
 // 具体的类型需要在 getCode 使用时提供
 let code: Fn = getCode;
 ```
 
-3. ##### 类中
+4、类中
 
 ```typescript
-// 泛型类的参数写在类名后面
-class Rectangle<K, V> {
-    key: K;
-    value: V;
-}
-```
-
-```typescript
-// 继承泛型类的例子
-class R<T> {
-    value: T;
-}
+// 1、泛型类的参数写在类名后面
+class Rectangle<K, V> { key: K; value: V;}
 // 继承时，必须给出泛型类的类型参数
-class X extends R<any> {}
-```
-
-类的本质是一个构造函数，因此泛型类也可以写成构造函数
-
-```typescript
+class X extends Rectangle<string, number> {}
+// 2、类的本质是一个构造函数，因此泛型类也可以写成构造函数
 type MyCode<T> = new (...arg: any[]) => T;
 // 或者
-interface MyCode<T> {
-    new (...arg: any[]): T;
-}
+interface MyCode<T> { new (...arg: any[]): T;}
 ```
 
 注意：泛型类描述的是 **类的实例**，不包括静态属性/方法，因为静态属性/方法的定义在类的本身，因此不能引用类型参数。
 
-4. ##### 别名中
+5、别名中
 
 ```typescript
 // type 命令定义的类型别名也可以使用泛型
 type A<T> = T | undefined | null;
-```
-
-树形结构的例子：
-
-```typescript
+// 树形结构的例子
 type Tree<T> = {
     value: T;
-    left: Tree<T> | null; // 递归饮用了 Tree 自身
+    left: Tree<T> | null; // 递归引用了 Tree 自身
     right: Tree<T> | null;
 }
 ```
 
 
 
-#### 二、类型参数的约束条件
+### 二、类型参数的约束条件
 
 TS提供了一种语法，允许在类型参数上面写明约束条件，不满足约束条件时，编译时报错。
 
@@ -239,15 +245,11 @@ type Fn<A extends string, B extends string = "Alice"> = [A, B];
 type Result = Fn<"hello">; // ['hello', 'Alice']
 ```
 
-
-
-
-
 .d.ts + js 文件 = ts 文件
 
 tsc（TS官方提供的编译器-一个npm模块）作用：把 .ts 转变成 .js，给出错误，但是仍旧生成编译产物。
 
-#### 三、TS 类型（纯基础记录）
+### 三、TS 类型（纯基础记录）
 
 所有的类型名称都是小写字母，大写字母是JS中内置对象，而不是类型名称
 
@@ -417,7 +419,7 @@ const x: symbol = Symbol();
 
 
 
-#### 四、知识点补充
+### 四、知识点补充
 
 1、TS规定，变量只有赋值后才能使用，否则就会报错
 
