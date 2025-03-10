@@ -60,21 +60,29 @@ typora-root-url: ..
 
     ```js
     app.use(async (ctx, next) => {
-        try {
-            await next();
-        } catch (err) {
+        try { await next() } catch (err) {
             ctx.status = err.statusCode || 500;
             ctx.body = { error: err.message };
         }
     });
     // 传递错误方式 - 将错误传递给错误处理中间件
     ctx.throw(400, '参数错误');
-
+    
 - **4、上下文的使用：req+res VS ctx**
 
-    Express：使用 req 和 res 处理请求和响应，
+    Express：使用 req 和 res 处理请求和响应，中间件一般是 `(req, res, next)`，响应是：
 
-    KOA2：使用 ctx 上下文对象来封装请求和响应
+    - `res.send()` 用于发送各种类型的响应（自动设置合适的 Content-Type）
+    - `res.json()` 用于发送 JSON 响应
+        - res.send、res.json 都是基于 Node 底层 Response 的 res.end 封装
+    - `res.status()` 用于设置响应状态码
+    
+    KOA2：使用 ctx 上下文对象来封装请求和响应，中间件一般是 `async (ctx, next)`，响应是通过 ctx 对象来处理
+    
+    - `ctx.body` 用于设置响应体
+    - `ctx.status` 用于设置响应状态码
+    
+    
 
 
 
