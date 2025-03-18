@@ -51,6 +51,9 @@ typora-root-url: ..
     interface Coder { compare<T>(arg: T): T {} }
     // 3 泛型约束 extends - 必须满足 {length: number} 接口的约束
     function getCode<T extends {length: number}>(arg: T): number { return arg.length }
+    // 箭头函数
+    const func = <T>(a:T):T[] => { return [a] }
+    const res = func<string>('Alice');
     ```
 
 - 关键特性
