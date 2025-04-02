@@ -19,10 +19,7 @@ header-img: "img/home.jpg"
 -   LTN1：一周后需要再次复习；
 -   LTN2：两周后需要再次复习；
 -   LTN3：三周后需要再次复习；
--   LTN4：四周后需要再次复习；
--   LTN5：两个月后需要再次复习；
--   LTN6：三个月后需要再次复习；
--   LTN7：四个月后需要再次复习；
+-   LTN4：四周后需要再次复习...
 
 ----
 
@@ -199,5 +196,13 @@ header-img: "img/home.jpg"
 下周期测试 90题,周期预估在 2.10 - 2.18(在补之前生病5天 delay 的题目)  
 
 - 【LTN 学习方法更新】① 之前优化的每日 LTN 做题优势在生病 delay 期间展示出了强大的灵活性 - LTN 不作为每日学习重点 ② 每日前端学习增加 codeReview 前一天代码的事项 + 项目需求完全按照自我管理需求来 ③ 逐步稳定前两项后, LTN1 的新增也需要关注
+
+#### changeLog:2025.4.2
+
+已有网站批量管理当前周期 [LTN 题目列表](http://codingwithalice.top:4001/)
+已有网站批量管理 [周报](http://codingwithalice.top/week) [2月月报](http://codingwithalice.top/month?monthId=2) [3月月报](http://codingwithalice.top/month?monthId=3)
+现已迭代到 LTN②①
+- 困境1：已开始上班，当前 LTN 周期题目分布强度无法每日完成
+- 困境2：当前LTN 周期设置在 10天左右，LTN 的周期在 7 天，每个周期都无法完全按照日期做题
 
 #### 随着执行计划，可修改当前方案
