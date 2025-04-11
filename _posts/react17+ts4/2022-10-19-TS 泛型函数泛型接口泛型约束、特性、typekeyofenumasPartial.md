@@ -22,8 +22,25 @@ typora-root-url: ..
     - type 类型别名：由 type 关键词创建 `type StringOrNumber = string | number`
 
     - keyof 获取一个类型的属性名作为联合类型
-        - typeof 获取一个值的类型，用于帮助推导，和 keyof 联合使用： `keyof typeof Type`
+        - 对象类型：typeof 获取一个值的类型，用于帮助推导，和 keyof 联合使用获取键的联合类型
+        
+            ```js
+            const obj = { a:1, b:2 }
+            type Objkeys = keyof typeof obj; // 'a'|'b'
+            ```
+        
+        - 数组类型：keyof 不适合直接获取取值类型
+        
+            ```js
+            const arr = ['a', 'b'];
+            type Keys = keyof typeof arr; // '0'|'1'|'length'|'toString'...(无意义)
+            // 应该使用 as const + typeof
+            const arr = ['a', 'b'] as const;
+            type Keys = typeof arr[number]; // 'a' | 'b'
+            ```
+        
     - enum 用于定义一组命名常量的结构
+
     - as 类型断言，将一个值强制转换为特定类型 `let length: number = (some as string).length`
 
 - 不同类型
