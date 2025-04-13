@@ -20,6 +20,9 @@ typora-root-url: ..
 - 知识点的补充：
 
     - mongodb 中没有表的概念，对应 mysql 的表 - 是“集合”
+        - 没有下划线和驼峰的转换，所以建议集合定义时直接使用驼峰
+        - mysql 中的 findOrCreate = mongodb 中的 findOneAndUpdate + upsert 组合
+        - mysql 中的 plain、raw 配置 = mongodb 中的 `.select(‘-_id’).lean()`
     - 适用的 半结构化、非结构化数据格式，对比 mysql 核心是 schema 的约束释放
     - mongodb 甚至不需要手动创建数据库 - 向一个不存在的数据库里插入数据时，会自动创建该数据库
 
