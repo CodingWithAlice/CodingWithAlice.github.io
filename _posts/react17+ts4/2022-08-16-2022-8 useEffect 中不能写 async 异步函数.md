@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      React那些难懂的Hooks
+title:      useEffect不能写异步函数
 subtitle:  
 date:       2022-08-16
 author:     
@@ -11,7 +11,38 @@ tags:
 typora-root-url: ..
 ---
 
-# React那些难懂的Hooks - useEffect
+# useEffect不能写异步函数
+
+总结
+
+- 1、useEffect 中不能写 async 异步函数 `useEffect(async () => {}, [])`
+
+    - 原因：useEffect 回调函数 **应该返回一个清理函数 或 undefined** - 而 async 函数隐式返回一个 promise，违反了 React 的规则
+
+    - 解决方案：很简单，在 useEffect 中定义异步函数后立即调用 - 避免返回值异常即可
+
+        ```js
+        useEffect(() => {
+            const fetchData = async () => {
+                const data = await getData();
+                setData(data);
+            };
+            fetchData();
+        }, [])
+        ```
+
+    - 与此相关的一些 useEffect 机制：
+
+        - 清理机制：useEffect 的设计是需要返回一个 **同步的清理函数**，如果返回 Promise 会覆盖清理逻辑
+        - 内存泄漏：如果组件卸载时，Promise 还没完成，可能导致状态更新到已卸载的组件
+        - 显式数据流：React 要求 副作用的管理是 显式的，直接返回 Promise 隐藏了异步操作的细节
+
+- 2、在组件内，什么时候去读取 props、state 是无关紧要的，因为在单次渲染的范围内，它们不会改变
+
+    - **在组件中定义的函数**在每一次渲染，都会重新生成 -> 保证了里面存储的状态是那次渲染的值
+    - useEffect 的回调函数，在依赖数组变化时，同样会重新生成 - 对应的 state、props 也会是那次渲染的值
+
+
 
 ## 背景
 
@@ -44,24 +75,15 @@ function Counter() {
   const [count, setCount] = useState(0);
   
   function handleAlertClick() {
-    setTimeout(() => {
-      alert('You clicked on: ' + count);
-    }, 3000);
+    setTimeout(() => { alert('You clicked on: ' + count) }, 3000);
   }
   
-  useEffect(() => {
-    document.title = `You clicked ${count} times`;
-  },[count]);
-
+  useEffect(() => { document.title = `You clicked ${count} times` },[count]);
   return (
     <div>
       <p>You clicked {count} times</p>
-      <button onClick={() => setCount(count + 1)}>
-        Click me
-      </button>
-      <button onClick={handleAlertClick}>
-        Show alert
-      </button>
+      <button onClick={() => setCount(count + 1)}>Click me</button>
+      <button onClick={handleAlertClick}>Show alert</button>
     </div>
   );
 }
