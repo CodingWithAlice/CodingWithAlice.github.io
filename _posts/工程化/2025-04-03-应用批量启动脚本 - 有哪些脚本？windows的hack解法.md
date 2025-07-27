@@ -20,6 +20,10 @@ typora-root-url: ..
 - 启动脚本根据环境使用不同的语言，包括 shell.sh、script.ps1、batch.bat
 - 虽然 windows 无法执行 sh shell.sh，但是 hack 一点，只要安装了 git 就可以使用 git bash 带的 sh 指令了
 
+>  batch 脚本的技术并不能帮助前端能力，但是这个处理的过程、深度了解 windows、linux等系统的差异，可以帮助我更好理解全栈的 "环境无关化" 方向 -> 学习精力应该集中在 **容器化技术 - Docker/Kubernetes**、**云服务集成 - AWS/Serverless**、**跨平台运行时 - Node/Deno/Bun**
+
+- 由于我自己使用 iterm ，可以定制化便于执行 `dev.applescript`
+
 
 
 背景：多个应用以 svn 管理，启动时单独启动
