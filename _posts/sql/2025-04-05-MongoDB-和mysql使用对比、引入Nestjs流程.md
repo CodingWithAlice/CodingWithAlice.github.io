@@ -20,7 +20,7 @@ typora-root-url: ..
 - 知识点的补充：
 
     - mongodb 中没有表的概念，对应 mysql 的表 - 是“集合”
-        - 没有下划线和驼峰的转换，所以建议集合定义时直接使用驼峰
+        - 没有下划线和驼峰的转换，所以建议集合**定义时直接使用驼峰**
         - mysql 中的 findOrCreate = mongodb 中的 findOneAndUpdate + upsert 组合
         - mysql 中的 plain、raw 配置 = mongodb 中的 `.select(‘-_id’).lean()`
     - 适用的 半结构化、非结构化数据格式，对比 mysql 核心是 schema 的约束释放
@@ -191,7 +191,34 @@ export const AnswerSchema = SchemaFactory.createForClass(Answer);
 #### 三、数据库查询 和 Sequelize 差异
 
 - findByIdAndUpdate、findById ：专门用于通过文档的 _id 字段进行更新的方法
-- findOneAndUpdate 使用普通查询条件
+- findOneAndUpdate 使用普通查询条件，查找并更新
+
+按功能分类记忆
+
+- **查询**：`find` 查询多条文档, `findOne` 查询单条文档, `findById`
+- **更新**：`updateOne`, `updateMany`, `findOneAndUpdate` 查找并更新
+- **删除**：`deleteOne`, `deleteMany`
+- **聚合**：`aggregate` 复杂聚合查询
+- **配置项**：`new`, `upsert` 不存在时创建, `lean` 返回纯JS对象(非Document，提升性能), `select` 字段投影(选择返回的字段), `sort`排序
+
+```js
+ .findOne({ topicId: +topicId })
+ .sort({ submitTime: -1 }) // 按时间倒排
+ .select('submitTime durationSec -_id') // 只返回submitTime字段，排除_id
+ .lean()
+
+ .findOneAndUpdate(
+        { topicId: dto.topicId, submitTime: dto.submitTime },
+        {
+          new: true, // 返回更新后的文档
+          upsert: true, // 如果不存在则创建
+          setDefaultsOnInsert: true, // 如果创建，应用 schema 默认值
+          rawResult: true, // 返回完整的 mongodb 操作结果
+        },
+      )
+```
+
+
 
 
 
