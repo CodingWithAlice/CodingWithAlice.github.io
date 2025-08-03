@@ -28,6 +28,9 @@ typora-root-url: ..
 
 ##### 并行：for-of/map 中同时启动所有异步任务 + Promise.all
 
+❌ **错误理解**：认为 Promise 在 `.then()` 或 `Promise.all` 时才执行。
+✅ **正确理解**：Promise 的异步逻辑在构造函数运行时就已经启动，后续方法只是处理结果。
+
 ```js
 async function foo(things){
     const results = [];

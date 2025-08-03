@@ -19,10 +19,10 @@ typora-root-url: ..
 
 1、class 组件声明的 state 如果来源于 props 可以直接赋值，避免闪烁
 
-2、value ?? ‘’ 和 value || ‘’ 的区别是 **?? 只关心 null 和 undefined(2个)**，**|| 会过滤所有的 falsy 值(6个)**
+2、`value ?? ‘’` 和 `value || ‘’` 的区别是 **`??` 只关心 `null` 和 `undefined`(2个)**，**|| 会过滤所有的 `falsy` 值(6个)**
 
-- 即 value 是 null 或 undefined 时，?? 和 || 都会判断为 true 返回为 ‘’
-- value 是 false、0、“”、NaN 时，?? 会判断为false，依旧返回 value 的值；|| 判断为 true，返回为 ‘’
+- 即 `value` 是 `null` 或 `undefined` 时，`??` 和 `||` 都会判断为 `true` 返回为 `‘’`
+- `value` 是 `false、0、“”、NaN` 时，`??` 会判断为`false`，依旧返回 `value` 的值；`||` 判断为 `true`，返回为 `‘’`
 
 
 
