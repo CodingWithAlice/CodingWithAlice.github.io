@@ -29,14 +29,16 @@ callback(prev, cur[, curIndex[, array]]);
 
 
 
-#### 补充 reduce 配合 then/awync 使用的错误写法
+#### 补充：`reduce` 能否配合 `then` / `async/await`？
 
-- 核心逻辑纠正： reduce 是一个同步方法，使用 async/then 会导致后续迭代可能在上一个异步还未执行时调用，出现数据更新不及时
+- 结论：`reduce` 本身是**同步遍历**没错，但它完全可以用来**串行**执行 Promise/async 任务；关键在于把 **累加器设计成 Promise**，并且在每次迭代中**正确地 return / await 上一次的结果**，从而形成「Promise 链」。
+- 常见误区：不是 “`reduce` 不能配合 `then` / `async/await`”，而是「把异步值当成同步值用」或「没有把 Promise 链 return 出去」，导致你看到 `splice/push` 之类的副作用像是“没生效”。
+- 联网核对：这种 “`reduce` + `pre.then(cur)` 串行执行任务” 的写法是社区长期通用模式；`async/await` 版的关键点同样是把累加器当作 Promise 来 `await`（可参考 Stack Overflow / CSS-Tricks 等对该模式的解释）。
 
-##### 错误写法1：reduce + async/await
+##### 反例1：`reduce` + `async/await`（没有把累加器当 Promise 正确串起来）
 
-- 问题描述：reduce 中，splice 和 push 未生效
-- 原因：reduce 使用 async 时，会导致每个 reduce 迭代返回的是一个 promise，**后续的迭代会在前一个 promise 还未解决时就开始执行**，使得 initList 修改的操作在不同上下文中进行，导致数据执行不及时
+- 现象：`reduce` 中 `splice` / `push` 表现异常
+- 本质原因：回调是 `async` 时返回的是 Promise；如果你**没有围绕“累加器 Promise”来组织时序**（例如没有用 `prePromise` 串起来），就会在多个异步回调交错时修改同一个 `initList`，产生竞态（race condition）
 
 ```js
 function execute(questList) { // 执行所有请求，返回所有响应
@@ -53,10 +55,10 @@ function execute(questList) { // 执行所有请求，返回所有响应
     }, [])
 }
 ```
-##### 错误写法2：reduce + then
+##### 反例2：`reduce` + `then`（没有把链 return 出去 / 累加器类型不一致）
 
-- 问题：reduce 中，splice 和 push 依旧未生效
-- 原因：reduce 是一个同步方法，它的同步执行特性和异步操作 Promise.race 冲突，then方法会在未来的某个时刻执行 -> 如果 reduce 迭代到下一个元素时，then 方法可能还未执行，导致 reduce 无法获取到 then 更新后的累加器 pre，会继续使用上一次回调返回的原值值（上述写法里面没有在 then 外面返回 pre 累加器）
+- 现象：你以为“下一个迭代会拿到上一个 `then` 更新后的值”，但实际上 `reduce` 只认**本次回调的返回值**
+- 本质原因：如果没有 `return pre.then(...)`（或返回一个新的 Promise 作为累加器），`reduce` 的累加器就不会等待异步完成；后续迭代拿到的仍是**旧的累加器**或**类型不一致的值**
 
 <img src="/../img/assets_2025/image-20250307185524019.png" style="zoom:30%;" />
 
@@ -100,23 +102,34 @@ processArray(promiseArr, 1).then((res) => {console.log(res)});   // 24
 function processArray(arr, initialValue) {
     return arr.reduce((pre, cur) => pre.then(cur), Promise.resolve(initialValue));
 }
-// 方法二：使用 async/await - cur(await pre)
+// 方法二：使用 async/await（等价于方法一，但可读性/性能通常不如 pre.then(cur)）
 function processArray(arr, initialValue) {
-    return arr.reduce(async (pre, cur, index) => {
-        return cur(await pre);
-    }, initialValue);
+    return arr.reduce(async (prePromise, cur) => {
+        const pre = await prePromise;
+        return cur(pre);
+    }, Promise.resolve(initialValue));
+}
+
+// 方法三：更推荐的写法（可读性最好）
+async function processArray(arr, initialValue) {
+    let result = initialValue;
+    for (const item of arr) {
+        result = await item(result);
+    }
+    return result;
 }
 ```
-- 注意：使用 `async/await` 的时候需要注意，`reduce` 在每次执行函数后，期望返回一个值（ `async` 会导致 `pre` 返回为一个 `pending` 的 `Promise`），以便进行下一步迭代：
+- 注意：`async reducer` 的累加器从第二次迭代开始就是 Promise，所以要么像“方法一”那样用 `pre.then(cur)`，要么像“方法二”那样把参数命名为 `prePromise` 并在回调开头 `await prePromise`。
 
     ![image-20241023121506614](/../img/assets_2023/image-20241023121506614.png)
 
     ```js
     function processArray(arr, initialValue) {
-        return arr.reduce(async (pre, cur, index) => {
-            return await cur(pre); // 错误点 - pre从第二个函数开始变成异步函数返回的非数字类型
+        return arr.reduce(async (pre, cur) => {
+            // 错误点：pre 从第二次迭代开始是 Promise，但这里没有 await pre
+            return await cur(pre);
         }, initialValue);
-    } // 得到 NaN
+    } // 可能得到 NaN / 类型错误（取决于 cur 期待的入参类型）
     ```
 
     <img src="/../img/assets_2023/image-20241023120944651.png" alt="image-20241023120944651" style="zoom:50%;" />
@@ -147,16 +160,16 @@ Array.prototype.mapUsingReduce = function (callback, thisArg) {
 };
 ```
 
-🆚 『 <u>`reduce` `filter`、`map`、`forEach`会跳过 `empty` 的数组项</u>』（`null`、`undefined`、`’‘` 都不会跳过）如下图
+🆚 『 <u>`reduce` / `filter` / `map` / `forEach` 都会跳过 `empty`（稀疏数组的洞）</u>』（但 `null`、`undefined`、`''` 这些“有值的元素”不会跳过）如下图
 
 ```js
 Array.prototype.mapUsingReduce = function (callback, thisArg) {
     return this.reduce((pre, cur, index, array) => {
-        let callbackValue = cur ? callback.call(thisArg, cur, index, array) : null;
-        pre.push(callbackValue);
+        // push 会把数组变成“致密数组”，丢失原数组的 empty 位置；用 pre[index] 才能保留洞位
+        pre[index] = callback.call(thisArg, cur, index, array);
         return pre;
     }, [])
-}// [5, 7, 10] - 注意第三项没有被处理
+}// [5, 7, , 10]
 ```
 
 ![image-20241023165216325](/../img/assets_2023/image-20241023165216325.png)
